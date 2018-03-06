@@ -139,12 +139,22 @@ app.get('/get_project_detail', function(request, response){
 
 app.post('/submit_bid', function(request, response){
   console.log(request.body);
-  var sql= "INSERT into Bid(project_id, user_id, number_of_days, created_at, price) values ('" + request.body.project_id + "',  '" + 
-  request.body.user_id + "', '" + request.body.no_of_days + "', '" + new Date().toLocaleString() + "', '" + request.body.price + "')";
-  console.log(sql);
+  var sql = "Select * from Bid where user_id = '" + request.body.user_id + "' and project_id = '" + request.body.project_id + "'";
   con.query(sql,function(err,rows){
     if(err) throw err ;
-    response.json({rows: rows})
+    if(rows.length >=1){
+      var sql_query = "Update Bid Set number_of_days = '" + request.body.no_of_days + "', price = '" + request.body.price + "' where project_id = '" +
+      request.body.project_id + "' and user_id = '" + request.body.user_id + "'";
+    }
+    else{
+      var sql_query= "INSERT into Bid(project_id, user_id, number_of_days, created_at, price) values ('" + request.body.project_id + "',  '" + 
+      request.body.user_id + "', '" + request.body.no_of_days + "', '" + new Date().toLocaleString() + "', '" + request.body.price + "')";
+      console.log(sql);
+    }
+    con.query(sql_query,function(err,rows){
+      if(err) throw err ;
+      response.json({rows: rows})
+    });
   });
 });
 
@@ -169,7 +179,58 @@ app.post('/hire_user', function(request, response){
     rows.length >= 1 ? response.json({dataUpdated: true, rows: rows[0]}) :  response.json({dataUpdated: false});
   });
 });
+// get_all_user_bid_projects
+
+app.get('/get_all_user_bid_projects', function(request, response){
+  console.log(request.query)
+  var sql = "Select Bid.*, Project.title, User.name from Bid left JOIN Project on (Bid.project_id = Project.id)" + 
+  "LEFT JOIN User on (Bid.user_id = User.id) where Bid.user_id= '" + request.query.u_id + "'";
+  console.log(sql)
+  con.query(sql,function(err,rows){
+    if(err) throw err;
+    console.log(rows);
+    rows.length >= 1 ? response.json({data_present: true, rows: rows}) :  response.json({data_present: false});
+  });
+  // response.json("hello");
+});
+
+
+app.post('/get-bid-value-for-user', function(request, response){
+  console.log(request.body)
+  // var sql = "Select Bid.*, Project.title, User.name from Bid left JOIN Project on (Bid.project_id = Project.id)" + 
+  // "LEFT JOIN User on (Bid.user_id = User.id) where Bid.user_id= '" + request.query.u_id + "'";
+  // console.log(sql)
+  var sql = "Select * from Bid where user_id = '" + request.body.user_id + "' and project_id = '" + request.body.project_id + "'";
+  console.log(sql)
+  con.query(sql,function(err,rows){
+    if(err) throw err;
+    console.log(rows);
+    rows.length >= 1 ? response.json({data_present: true, rows: rows[0]}) :  response.json({data_present: false});
+  });
+});
 
 app.listen(port, function() {
  console.log(`api running on port ${port}`);
 });
+
+// SELECT Project.*, User.name, count(Bid.project_id) as total_bids from Project left join Bid on (Project.id = Bid.project_id) LEFT JOIN User on 
+// (Project.user_id = User.id) where Project.user_id = '100' group by Project.id
+// SELECT Project.*, User.name, AVG(Bid.number_of_days) as total_bids from Project left join Bid on (Project.id = Bid.project_id) LEFT JOIN User on 
+// (Project.user_id = User.id) where Project.user_id = '100' group by Project.id
+
+// Select Project.*, User.name, Bid.number_of_days, Project.id, AVG(DISTINCT Bid.number_of_days) as days from Project left join Bid on (Project.id = Bid.project_id) LEFT JOIN User on (Project.user_id = User.id) where Bid.user_id = '100' GROUP BY Bid.id
+
+// Select AVG(Bid.number_of_days) as total, Project.title, User.name from Bid left JOIN Project on (Bid.project_id = Project.id) LEFT JOIN User on (Bid.user_id = User.id) GROUP BY Bid.id
+
+
+// SELECT AVG(Bid.number_of_days), Project.id, Project.title from Bid INNER JOIN Project on (Bid.project_id=Project.id) GROUP BY Project.id
+// SELECT AVG(Bid.number_of_days), Bid.number_of_days, Project.id, Project.title from Bid INNER JOIN Project on (Bid.project_id=Project.id) where Bid.user_id = '100' GROUP BY Project.id
+// SELECT AVG(Bid.number_of_days), User.name, Bid.number_of_days, Project.id, Project.title from Bid INNER JOIN Project on (Bid.project_id=Project.id) INNER JOIN User on (Bid.user_id = User.id) where Bid.user_id = '100' GROUP BY Project.id, Bid.number_of_days
+
+
+
+
+
+// select averageTable.avgDays,title,averageTable.id,X.number_of_days,c.name, c.id
+// from (select avg(b.number_of_days) as avgDays,p.title,p.id from Bid b,Project p where b.project_id=p.id group by p.id) as averageTable, Bid X ,User c where X.project_id=averageTable.id and X.user_id=100 
+// and X.user_id =c.id
