@@ -7,7 +7,7 @@ import swal from 'sweetalert2'
 class CreateProject extends Component {
   constructor(){
     super();
-    this.state =  {title: '', description: '', skills_required: '', min_budget : '', max_budget: ''};
+    this.state =  {title: '', description: '', skills_required: '', min_budget : '', max_budget: '', file: ''};
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleSkillsChange = this.handleSkillsChange.bind(this);
@@ -47,11 +47,28 @@ class CreateProject extends Component {
   }
 
   handleFormSubmit(e){
+    debugger
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', this.state.file);
+    formData.append('user_id', localStorage.user_id);
+    const config = {
+      headers: {
+      'content-type': 'multipart/form-data'
+      }
+    }
+    formData.append('title', this.state.title);
+    formData.append('description', this.state.description);
+    formData.append('skills_required', this.state.skills_required);
+    formData.append('minimum_budget', this.state.min_budget);
+    formData.append('maximum_budget', this.state.max_budget);
+    formData.append('user_id', localStorage.user_id);
+
+
     let user_id = localStorage.user_id;
-    let form_values = {title: this.state.title, description: this.state.description, skills_required: this.state.skills_required
-      , minimum_budget: this.state.min_budget, maximum_budget: this.state.max_budget, user_id: localStorage.user_id};
-      console.log(form_values);
+    // let form_values = {title: this.state.title, description: this.state.description, skills_required: this.state.skills_required
+    //   , minimum_budget: this.state.min_budget, maximum_budget: this.state.max_budget, user_id: localStorage.user_id};
+    //   console.log(form_values);
     
     let titleErrorPresent = !this.validateTitleFormat(this.state.title) ? true : false;
     let descriptionErrorPresent = !this.validateDescriptionFormat(this.state.description) ? true : false;
@@ -62,8 +79,9 @@ class CreateProject extends Component {
     if(titleErrorPresent || descriptionErrorPresent || skillsErrorPresent || minBudgetErrorPresent || maxBudgetErrorPresent) {return;}
     if( user_id != null){
       var self = this;
-      axios.post("http://localhost:3001/create_project", form_values)
+      axios.post("http://localhost:3001/create_project", formData, config)
       .then(function (response) {
+        debugger
         console.log(response);
         self.setState({
           title: '', 
@@ -130,6 +148,21 @@ class CreateProject extends Component {
     return true;
   }
 
+  handleFileInputChange(e){
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0]
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        });
+      }
+      reader.readAsDataURL(file);
+      debugger
+      document.getElementById("project-file").innerHTML = e.target.files[0].name;
+  }
+
   render(props) {
     let isLoggedIn = localStorage.getItem("isLoggedIn");
     if(isLoggedIn != "true") {
@@ -149,6 +182,15 @@ class CreateProject extends Component {
               </div>
 
               <form className="login100-form validate-form" method="POST" onSubmit={this.handleFormSubmit}>
+
+                <label for="file-upload" className="custom-file-upload form-choose">
+                      Choose File
+                </label>
+                <input id="file-upload" type="file" onChange={ this.handleFileInputChange.bind(this) } />
+                <div id = "project-file"></div>
+                <div></div>
+                <div></div>
+                <div></div>
                 <div className="wrap-input100 validate-input m-b-26 form-div" data-validate="Title is required">
                   <span className="label-input100">Title</span>
                   <input className="input100" type="text" name="title" placeholder="Enter Name of Project"  value={ this.state.title } 

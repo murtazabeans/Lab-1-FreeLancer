@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import UserBidProject from './UserBidProject';
+import UserBidProject from './UserBidProject';
 import axios from 'axios';
 
 class AllUserBidProjects extends Component {
@@ -24,17 +24,6 @@ class AllUserBidProjects extends Component {
         self.setState({
           data: response.data.rows
         })
-        // axios.post("http://localhost:3001/get_avg_bids")
-        //   .then(function (response) {
-        //     if(response.data.rows != null){
-        //       let user_detail = response.data.rows;
-        //       console.log(response);
-        //       self.setState({
-        //         data: response.data.rows
-        //       })
-
-
-
         return;
       }
       return;
@@ -43,26 +32,25 @@ class AllUserBidProjects extends Component {
 
   render() {
      let projectList;
-    // if(this.state.data != null){
-    //   projectList = this.state.data.map(project => {
-    //     return(
-    //       <ProjectDetail key = {project.id} id = {project.id} number_of_bids = {project.total_bids}  name={project.title} description={project.description} skills_required = {project.skills_required}
-    //       max_budget = {project.max_budget} min_budget = {project.min_budget} employer_name={project.name}   />
-    //     )
-    //   })
-    // }
+    if(this.state.data != null){
+      debugger
+      projectList = this.state.data.map(project => {
+        return(
+          <UserBidProject key = {project.id}  project_name = {project.title} employer_name={project.name} avg_bid={project.avgDays}
+          user_bid={project.number_of_days} assigned_to = {project.assigned_to}    />
+        )
+      })
+    }
     return (
       <div>
         <table class="table details-table">
           <thead class = "table-header">
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Description</th>
-              <th scope="col">Skills Required</th>
-              <th scope="col">Budget Range($)</th>
-              <th scope="col">Employer Name</th>
-              <th scope="col">Number of Bids</th>
-              <th scope="col">Actions</th>
+              <th scope="col">Project Name</th>
+              <th scope="col">Employer</th>
+              <th scope="col">Average Bid(in days)</th>
+              <th scope="col">Your Bid(in days)</th>
+              <th scope="col">Status</th>
             </tr>
           </thead>
           <tbody>

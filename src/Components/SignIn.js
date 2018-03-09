@@ -58,6 +58,7 @@ class SignIn extends Component {
 
   render() {
     let isLoggedIn = localStorage.getItem("isLoggedIn");
+    
     if(isLoggedIn == "true") {
       window.location.href = "http://localhost:3000";
       return;
@@ -67,8 +68,13 @@ class SignIn extends Component {
       //   text: 'You have signed in Successfully!'
       // })
     }
+
+    // if(this.props.user.isLoggedIn){
+    //   this.props.history.push('/');
+    // }
     return (
       <div>
+
         <div>
         </div>
         <div className="limiter">
@@ -130,11 +136,13 @@ function mapDispatchToProps(dispatch){
     loginCredentials: (details) => {
       axios.post('http://localhost:3001/signin', details)
       .then(response => {
+        debugger
         console.log(response.data);
         if(response.data.correctCredentials){
+          debugger
           localStorage.setItem("isLoggedIn", true);
           localStorage.setItem("user_id", response.data.rows.id)
-          dispatch({type: 'LoggedIn', payload: response});
+          dispatch({type: 'LoggedIn', payload: response.data.rows});
         }
         else{
           //self.props.history.push('/signin');

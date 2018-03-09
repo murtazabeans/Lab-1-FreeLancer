@@ -8,7 +8,7 @@ class ProjectView extends Component {
 
   constructor(){
     super();
-    this.state = { data: [], days: "", price: "", btn_name: "Submit Bid" };
+    this.state = { data: [], days: "", price: "", btn_name: "Submit Bid"  };
     this.handleBidClick = this.handleBidClick.bind(this);
     this.handleBidInput = this.handleBidInput.bind(this);
     this.handlePriceInput = this.handlePriceInput.bind(this);
@@ -96,6 +96,7 @@ class ProjectView extends Component {
     var self = this;
     axios.get("http://localhost:3001/get_project_detail?p_id=" + project_id)
     .then(function (response) {
+      debugger
       if(response.data.rows != null){
         let user_detail = response.data.rows;
         console.log(response);
@@ -116,6 +117,14 @@ class ProjectView extends Component {
   render() {
       const budget_range = this.state.data !== 'undefined' ? this.state.data.min_budget + " - " + 
       this.state.data.max_budget : null;
+      let attachment_url = null;
+      debugger
+      if(this.state.data.file_name != undefined && this.state.data.file_name != ""){
+        var a = require('../project-file/' + this.state.data.file_name)
+        
+        attachment_url = <a href = {a} className="custom-file-upload form-choose download-link" target="_blank">Show Attachment</a>
+      }
+      debugger
       return (
           <div>
             <div className="limiter">
@@ -126,7 +135,8 @@ class ProjectView extends Component {
                       Project Details
                     </span>
                   </div>
-
+                  {attachment_url}
+                  {/* <input id="file-upload" type="file"  /> */}
                   <form className="login100-form validate-form">
                     <div className="wrap-input100 validate-input m-b-26" data-validate="email is required">
                       <span className="label-input100">Name</span>
@@ -140,6 +150,10 @@ class ProjectView extends Component {
                       {/* <input className="input100" type="password" name="pass" placeholder="Enter password" onChange= {this.handlePasswordChange} /> */}
                       <span className="focus-input100"></span>
                     </div>
+                    
+
+                    {/* <a download href="http://www.pdf995.com/samples/pdf.pdf" target="_blank">Attachment</a> */}
+
 
                     <div className="wrap-input100 validate-input m-b-18">
                       <span className="label-input100">Skills Required</span>

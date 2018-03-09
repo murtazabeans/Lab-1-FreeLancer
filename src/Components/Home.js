@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';  
+import {bindActionCreators} from 'redux';
 
 class Home extends Component {
   
   render(props) {
+    debugger
+    let dashboard, projects_page, post_project, user_profile, session_link = null;
+    if(this.props.user.login_data != null) {
+      dashboard = <a className="link-style nav-link btn-info" href="#">Dashboard</a>
+      projects_page = <a className="link-style nav-link btn-info" href = "/projects"  >All Projects</a>
+      post_project = <a className="link-style nav-link btn-info" href="/new-project">Post Project </a>
+      user_profile = <a className="link-style nav-link btn-info" href="/edit_profile">Edit Profile </a>
+      session_link = <a className="link-style nav-link btn-info" onClick = {this.handleSignOut} href="#">Sign Out</a>
+    }
+    else{}
     return (
       <div>
         <header className="masthead text-white text-center">
@@ -137,4 +149,11 @@ class Home extends Component {
     )
   }
 }
-export default Home;
+
+function mapStateToProps(state){
+  return{
+    user: state.userLoggedIn
+  }
+}
+
+export default connect(mapStateToProps)(Home);

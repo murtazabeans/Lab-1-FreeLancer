@@ -27,15 +27,52 @@
 	margin-top: 5%;
 }
 
+input[type="file"] {
+	display: none;
+}
+
+.image-form-group {
+	text-align: center;
+	margin-top: 35px;
+}
+
+.custom-file-upload {
+	border: 1px solid #ccc;
+	display: inline-block;
+	padding: 6px 12px;
+	cursor: pointer;
+	background-color: #29B2FE;
+}
+
+.form-choose{
+	background-color: lightgray;
+	margin-right: 25%;
+}
+
 .table-header{
 	background-color: black;
 	color: white;
 }
 
+#profile_image{
+  margin-top: 5%;
+}
+
+.status{
+	font-weight: bold;
+}
 .div-space
 {
 	margin-top: 10px;
 }
+
+.download-link{
+    margin-left: 42%;
+    margin-top: 10%;
+}
+/* div#project-file {
+	margin-right: 50%;
+} */
 
 .action-link{
 	width: 55%;
@@ -44,6 +81,13 @@
 
 #bid_form{
 	display: none;
+}
+
+#img-form-submit{
+	/* display: none; */
+	position: absolute;
+	right: 30%;
+	background-color: #29B2FE;
 }
 
 .form-div {

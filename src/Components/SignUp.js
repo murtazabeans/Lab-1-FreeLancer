@@ -97,6 +97,7 @@ class SignUp extends Component {
   }
 
   render() {
+    debugger
     let isLoggedIn = localStorage.getItem("isLoggedIn");
     if(isLoggedIn == "true") {
       window.location.href = "http://localhost:3000";
@@ -105,6 +106,7 @@ class SignUp extends Component {
     // if(this.props.user.isLoggedIn){
     //   this.props.history.push('/');
     // }
+    debugger
     return (
       <div>
         <div className="limiter">
@@ -168,7 +170,8 @@ function mapDispatchToProps(dispatch){
     registerUser: (details) => {
       axios.post('http://localhost:3001/signup', details)
       .then((response) => {
-        dispatch({type: 'LoggedIn', payload: response});
+        debugger
+        dispatch({type: 'LoggedIn', payload: response.data.rows});
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("user_id", response.data.rows.id)
         window.location.href = "http://localhost:3000";

@@ -26,12 +26,16 @@ class ProjectBid extends Component {
 
   render() {
     let hire_button = null;
+    let image_tag = <img id = "profile_image" src= { require('../images/' + this.props.image_name) } alt="Smiley face" height="80px" width="80px" />
     if(this.props.isProjectOwner){
         hire_button = <a href = "#" id = {this.props.free_lancer_id} className="link-style nav-link btn-info action-link" onClick = {this.handleHireButton}>Hire</a>
       }
     return (
         <tr>
-          <td></td>
+          <td>
+            {image_tag}
+
+          </td>
           <td>{this.props.freelancer_name}</td>
           <td>{this.props.price}</td>
           <td>{this.props.days}</td>

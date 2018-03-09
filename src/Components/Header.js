@@ -30,9 +30,7 @@ class Header extends Component {
       <div>
         <nav className="navbar navbar-light bg-light static-top">
           <div className="container">
-          
           <a href="https://www.freelancer.com/" target="_blank" className="navbar-brand web-link" title="Home"><img src= {require('../img/freelancer.svg')} /></a>
-
           { dashboard }
           { projects_page }
           { post_project }

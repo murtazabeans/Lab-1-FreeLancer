@@ -4,6 +4,10 @@ var app = express();
 var router = express.Router();
 var mysql = require('mysql');
 var bcrypt = require('bcrypt');
+var multiparty = require('multiparty');
+var http = require('http');
+var util = require('util');
+var fs = require('fs');
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -83,22 +87,70 @@ app.post('/update_profile', function(request, response){
   });
 });
 
-app.post('/create_project', function(request, response){
-  console.log(request.body);
-  var sql= "INSERT into Project(title, description, skills_required, min_budget, max_budget, user_id, created_at) values ('" + request.body.title + "',  '" + 
-  request.body.description+ "', '" + request.body.skills_required + "', '" +  request.body.minimum_budget + "', '" + request.body.maximum_budget + "', '" 
-  + request.body.user_id + "', '" + new Date().toLocaleString() + "')";
+app.post('/create_project', function(req, res){
+  // let form = new multiparty.Form();
+  // form.parse(req, (err, fields, files) => {
+  // let { path: tempPath, originalFilename } = files.file[0];
+  // var fileType = originalFilename.split(".");
+  // console.log(fileType)
+  // let copyToPath = "./src/images/" + fields.user_id[0] + "." + fileType[fileType.length - 1];
+  // //add path (copyToPath) to database pending 
+  // console.log(copyToPath);
+  // fs.readFile(tempPath, (err, data) => {
+  // if (err) throw err;
+  // fs.writeFile(copyToPath, data, (err) => {
+  // if (err) throw err;
+  // // delete temp image
+  // fs.unlink(tempPath, () => {
+  // });
+  // var sql = "Update User set profile_image_name='" + fields.user_id[0] + "." + fileType[fileType.length - 1] +   "' where id = '" +  fields.user_id[0] + "'";
+  // console.log(sql);
+  // con.query(sql,function(err,rows){
+  //   if(err) throw err;
+  //   console.log(rows);
+  // });
+  // res.json({message: 'Image Upload Success', fileType: fileType[fileType.length - 1]});
+  // });
+  // });
+  // })
+  let form = new multiparty.Form();
+  form.parse(req, (err, fields, files) => {
+  let { path: tempPath, originalFilename } = files.file[0];
+  var fileName = + new Date() + originalFilename.replace(/\s/g, '');
+  
+  let copyToPath = "./src/project-file/" + fileName; 
+  //add path (copyToPath) to database pending 
+  console.log(copyToPath);
+  fs.readFile(tempPath, (err, data) => {
+  if (err) throw err;
+  fs.writeFile(copyToPath, data, (err) => {
+  if (err) throw err;
+  // delete temp image
+  console.log(fields);
+  fs.unlink(tempPath, () => {
+  });
+  var sql= "INSERT into Project(title, description, skills_required, min_budget, max_budget, user_id, created_at, file_name) values ('" + fields.title[0] + "',  '" + 
+  fields.description[0]+ "', '" + fields.skills_required[0] + "', '" +  fields.minimum_budget[0] + "', '" + fields.maximum_budget[0] + "', '" 
+  + fields.user_id[0] + "', '" + new Date().toLocaleString() + "', '" + fileName + "')";
   console.log(sql);
   con.query(sql,function(err,rows){
     if(err) throw err ;
   });
-
-  var get_user_query = "Select * from User where email = '" + request.body.email + "' and password = '" + request.body.password + "'"
-  con.query(get_user_query,function(err,rows){
-    // if(err) throw err;
-    console.log(rows[0]);
-    response.json({rows: rows[0]})
   });
+  });
+});
+  // console.log(request);
+
+  
+  res.json({message: "hello"});
+
+
+  // var get_user_query = "Select * from User where email = '" + request.body.email + "' and password = '" + request.body.password + "'"
+  // con.query(get_user_query,function(err,rows){
+  //   // if(err) throw err;
+  //   console.log(rows[0]);
+  //   response.json({rows: rows[0]})
+  // });
 });
 
 app.get('/get_all_projects', function(request, response){
@@ -115,7 +167,7 @@ app.get('/get_all_projects', function(request, response){
 app.get('/get_project_bids', function(request, response){
   console.log(request.query);
   //var a = request.query.project_id;
-  var sql = "Select b.id as 'id', u.id as 'freelancer_id', u.name as 'free_lancer_name', p.user_id as 'project_owner', b.price as 'bid_price', " +
+  var sql = "Select b.id as 'id', u.id as 'freelancer_id', u.name as 'free_lancer_name', u.profile_image_name as profile_image_name, p.user_id as 'project_owner', b.price as 'bid_price', " +
   "b.number_of_days as 'days' from User u, Project p, Bid b where b.user_id = u.id and b.project_id = p.id and p.id = '" + request.query.pid + "'";
   console.log(sql);
   con.query(sql, function(err,rows){
@@ -182,9 +234,9 @@ app.post('/hire_user', function(request, response){
 // get_all_user_bid_projects
 
 app.get('/get_all_user_bid_projects', function(request, response){
-  console.log(request.query)
-  var sql = "Select Bid.*, Project.title, User.name from Bid left JOIN Project on (Bid.project_id = Project.id)" + 
-  "LEFT JOIN User on (Bid.user_id = User.id) where Bid.user_id= '" + request.query.u_id + "'";
+  var sql = "select averageTable.avgDays, title, assigned_to, averageTable.id,X.number_of_days,c.name, c.id from" +
+  " (select avg(b.number_of_days) as avgDays, p.title, p.id, p.assigned_to from Bid b,Project p where b.project_id=p.id group by p.id) " +
+  "as averageTable, Bid X ,User c where X.project_id=averageTable.id and X.user_id='" + request.query.u_id + "' and X.user_id =c.id";
   console.log(sql)
   con.query(sql,function(err,rows){
     if(err) throw err;
@@ -196,10 +248,6 @@ app.get('/get_all_user_bid_projects', function(request, response){
 
 
 app.post('/get-bid-value-for-user', function(request, response){
-  console.log(request.body)
-  // var sql = "Select Bid.*, Project.title, User.name from Bid left JOIN Project on (Bid.project_id = Project.id)" + 
-  // "LEFT JOIN User on (Bid.user_id = User.id) where Bid.user_id= '" + request.query.u_id + "'";
-  // console.log(sql)
   var sql = "Select * from Bid where user_id = '" + request.body.user_id + "' and project_id = '" + request.body.project_id + "'";
   console.log(sql)
   con.query(sql,function(err,rows){
@@ -209,9 +257,43 @@ app.post('/get-bid-value-for-user', function(request, response){
   });
 });
 
+app.post('/upload-Image', function(req, res){
+  let form = new multiparty.Form();
+  form.parse(req, (err, fields, files) => {
+  let { path: tempPath, originalFilename } = files.file[0];
+  var fileType = originalFilename.split(".");
+  console.log(fileType)
+  let copyToPath = "./src/images/" + fields.user_id[0] + "." + fileType[fileType.length - 1];
+  //add path (copyToPath) to database pending 
+  console.log(copyToPath);
+  fs.readFile(tempPath, (err, data) => {
+  if (err) throw err;
+  fs.writeFile(copyToPath, data, (err) => {
+  if (err) throw err;
+  // delete temp image
+  fs.unlink(tempPath, () => {
+  });
+  var sql = "Update User set profile_image_name='" + fields.user_id[0] + "." + fileType[fileType.length - 1] +   "' where id = '" +  fields.user_id[0] + "'";
+  console.log(sql);
+  con.query(sql,function(err,rows){
+    if(err) throw err;
+    console.log(rows);
+  });
+  res.json({message: 'Image Upload Success', fileType: fileType[fileType.length - 1]});
+  });
+  });
+  })
+})
+
 app.listen(port, function() {
  console.log(`api running on port ${port}`);
 });
+
+
+
+
+
+
 
 // SELECT Project.*, User.name, count(Bid.project_id) as total_bids from Project left join Bid on (Project.id = Bid.project_id) LEFT JOIN User on 
 // (Project.user_id = User.id) where Project.user_id = '100' group by Project.id

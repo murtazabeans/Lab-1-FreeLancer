@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import Background from '../img/bg-01.jpg';
 import axios from 'axios';
 import SweetAlert from 'sweetalert-react';
+import ImageUpload from './ImageUpload'
 import swal from 'sweetalert2'
 
-class Header extends Component {
+class UserProfile extends Component {
   constructor(){
     super();
     this.state =  {email: '', name: '', phno: '', skills: '', about_me : ''};
@@ -16,7 +17,7 @@ class Header extends Component {
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
-  componentDidMount(){
+  componentWillMount(){
     this.loadUserDetailsFromServer();
   }
 
@@ -56,6 +57,7 @@ class Header extends Component {
       var self = this;
       axios.get("http://localhost:3001/get_user?id=" + id)
       .then(function (response) {
+        debugger
         if(response.data.rows != null){
           let user_detail = response.data.rows;
           console.log(response);
@@ -64,7 +66,7 @@ class Header extends Component {
             name: user_detail.name, 
             phno: user_detail.phone_number == null ? "" : user_detail.phone_number,
             skills: user_detail.skills == null ? "" : user_detail.skills,
-            about_me: user_detail.about_me == null ? "" : user_detail.about_me,          
+            about_me: user_detail.about_me == null ? "" : user_detail.about_me
           })
           return;
         }
@@ -149,6 +151,7 @@ class Header extends Component {
   }
 
   render(props) {
+    debugger
     let isLoggedIn = localStorage.getItem("isLoggedIn");
     if(isLoggedIn != "true") {
       this.props.history.push("/signin");
@@ -165,8 +168,10 @@ class Header extends Component {
                   Edit Profile
                 </span>
               </div>
-
+              <ImageUpload />
+      
               <form className="login100-form validate-form" method="POST" onSubmit={this.handleFormSubmit}>
+                
                 <div className="wrap-input100 validate-input m-b-26 form-div" data-validate="Name is required">
                   <span className="label-input100">Name</span>
                   <input className="input100" type="text" name="name" placeholder="Enter name"  value={ this.state.name } 
@@ -225,4 +230,4 @@ class Header extends Component {
     )
   }
 }
-export default Header;
+export default UserProfile;
