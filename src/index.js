@@ -17,7 +17,9 @@ import AllProjects from './Components/AllProjects';
 import ProjectView from './Components/ProjectView';
 import AllProjectBids from './Components/AllProjectBids';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import Dashboard from './Components/Dashboard';
+import AllUserBidProjects from './Components/AllUserBidProjects';
+import MyProjects from './Components/MyProjects';
+import UserProfileView from './Components/UserProfileView';
 
 function loadState() {
   try {
@@ -50,7 +52,9 @@ ReactDOM.render(
             <Route path="/projects" component={AllProjects} />
             <Route path="/project-detail" component={ProjectView}/>
             <Route path="/project-bids" component={AllProjectBids}/>
-            <Route path = "/dashboard" component = {Dashboard} />
+            <Route path = "/my-bid-projects" component = {AllUserBidProjects} />
+            <Route path = "/my-projects" component = {MyProjects} />
+            <Route path = "/profile" component = {UserProfileView} />
           </div>
         </Router>
     </Layout>

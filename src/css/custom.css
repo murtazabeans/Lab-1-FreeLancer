@@ -58,6 +58,20 @@ input[type="file"] {
   margin-top: 5%;
 }
 
+table.table.details-table {
+	max-width: 1650px;
+	margin-left: 5%;
+}	
+
+.login100-form-title.details-header::before{
+		background-color: black !important;
+}
+
+#profile_image_display{
+	margin-top: 5%;
+	margin-left: 40%;
+}
+
 .status{
 	font-weight: bold;
 }
@@ -167,6 +181,11 @@ p {
 ul, li {
 	margin: 0px;
 	list-style-type: none;
+}
+
+.project-name{
+	color: blue;
+	font-weight: bold;
 }
 
 input {

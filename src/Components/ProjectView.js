@@ -182,7 +182,7 @@ class ProjectView extends Component {
                     <br/>
                     <div className="container-login100-form-btn">
                       <button className="link-style login100-form-btn" onClick={this.handleBidClick}>
-                        Bid on Project
+                        Click to Bid
                       </button>
                     </div>
                   <br/>

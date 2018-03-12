@@ -14,10 +14,11 @@ class Header extends Component {
   }
 
   render(props) {
-    let  session_link, post_project, user_profile, projects_page, bid_page, dashboard = null;
+    let  session_link, post_project, user_profile, projects_page, bid_page, mybidprojects, my_projects = null;
     let isLoggedIn = localStorage.getItem("isLoggedIn");
     if(isLoggedIn == "true") {
-      dashboard = <a className="link-style nav-link btn-info" href="#">Dashboard</a>
+      mybidprojects = <a className="link-style nav-link btn-info" href="/my-bid-projects">My Bid Projects</a>
+      my_projects = <a className="link-style nav-link btn-info" href="my-projects">My Projects</a>
       projects_page = <a className="link-style nav-link btn-info" href = "/projects"  >All Projects</a>
       post_project = <a className="link-style nav-link btn-info" href="/new-project">Post Project </a>
       user_profile = <a className="link-style nav-link btn-info" href="/edit_profile">Edit Profile </a>
@@ -31,7 +32,8 @@ class Header extends Component {
         <nav className="navbar navbar-light bg-light static-top">
           <div className="container">
           <a href="https://www.freelancer.com/" target="_blank" className="navbar-brand web-link" title="Home"><img src= {require('../img/freelancer.svg')} /></a>
-          { dashboard }
+          { mybidprojects }
+          { my_projects }
           { projects_page }
           { post_project }
           { user_profile }

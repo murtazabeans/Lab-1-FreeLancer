@@ -88,31 +88,6 @@ app.post('/update_profile', function(request, response){
 });
 
 app.post('/create_project', function(req, res){
-  // let form = new multiparty.Form();
-  // form.parse(req, (err, fields, files) => {
-  // let { path: tempPath, originalFilename } = files.file[0];
-  // var fileType = originalFilename.split(".");
-  // console.log(fileType)
-  // let copyToPath = "./src/images/" + fields.user_id[0] + "." + fileType[fileType.length - 1];
-  // //add path (copyToPath) to database pending 
-  // console.log(copyToPath);
-  // fs.readFile(tempPath, (err, data) => {
-  // if (err) throw err;
-  // fs.writeFile(copyToPath, data, (err) => {
-  // if (err) throw err;
-  // // delete temp image
-  // fs.unlink(tempPath, () => {
-  // });
-  // var sql = "Update User set profile_image_name='" + fields.user_id[0] + "." + fileType[fileType.length - 1] +   "' where id = '" +  fields.user_id[0] + "'";
-  // console.log(sql);
-  // con.query(sql,function(err,rows){
-  //   if(err) throw err;
-  //   console.log(rows);
-  // });
-  // res.json({message: 'Image Upload Success', fileType: fileType[fileType.length - 1]});
-  // });
-  // });
-  // })
   let form = new multiparty.Form();
   form.parse(req, (err, fields, files) => {
   let { path: tempPath, originalFilename } = files.file[0];
@@ -139,18 +114,7 @@ app.post('/create_project', function(req, res){
   });
   });
 });
-  // console.log(request);
-
-  
   res.json({message: "hello"});
-
-
-  // var get_user_query = "Select * from User where email = '" + request.body.email + "' and password = '" + request.body.password + "'"
-  // con.query(get_user_query,function(err,rows){
-  //   // if(err) throw err;
-  //   console.log(rows[0]);
-  //   response.json({rows: rows[0]})
-  // });
 });
 
 app.get('/get_all_projects', function(request, response){
@@ -231,21 +195,34 @@ app.post('/hire_user', function(request, response){
     rows.length >= 1 ? response.json({dataUpdated: true, rows: rows[0]}) :  response.json({dataUpdated: false});
   });
 });
-// get_all_user_bid_projects
+
+// var sql = "select averageTable.avgDays, title, assigned_to, averageTable.project_id, X.number_of_days, c.name, c.id from" +
+//   " (select avg(b.number_of_days) as avgDays, p.title, b.project_id, p.assigned_to from Bid b,Project p where b.project_id=p.id group by p.id) " +
+//   "as averageTable, Bid X ,User c where X.project_id=averageTable.project_id and X.user_id='" + request.query.u_id + "' and X.user_id =c.id";
 
 app.get('/get_all_user_bid_projects', function(request, response){
-  var sql = "select averageTable.avgDays, title, assigned_to, averageTable.id,X.number_of_days,c.name, c.id from" +
-  " (select avg(b.number_of_days) as avgDays, p.title, p.id, p.assigned_to from Bid b,Project p where b.project_id=p.id group by p.id) " +
-  "as averageTable, Bid X ,User c where X.project_id=averageTable.id and X.user_id='" + request.query.u_id + "' and X.user_id =c.id";
+  var sql = "select averageTable.avgDays, title, assigned_to, averageTable.project_id, X.number_of_days, c.name, c.id from" +
+  " (select avg(b.number_of_days) as avgDays, p.title, b.project_id, p.assigned_to,p.user_id from Bid b,Project p where b.project_id=p.id group by p.id) " +
+  "as averageTable, Bid X ,User c where X.project_id=averageTable.project_id and X.user_id='" + request.query.u_id + "' and averageTable.user_id =c.id";
   console.log(sql)
   con.query(sql,function(err,rows){
     if(err) throw err;
     console.log(rows);
     rows.length >= 1 ? response.json({data_present: true, rows: rows}) :  response.json({data_present: false});
   });
-  // response.json("hello");
 });
 
+app.get('/get_all_user_published_projects', function(request, response){
+  var sql = "select averageTable.avgDays, title, assigned_to, averageTable.project_id, X.number_of_days, c.name, c.id from" +
+  " (select avg(b.number_of_days) as avgDays, p.title, b.project_id, p.assigned_to,p.user_id from Bid b,Project p where b.project_id=p.id group by p.id) " +
+  "as averageTable, Bid X ,User c where X.project_id=averageTable.project_id and X.user_id='" + request.query.u_id + "' and averageTable.user_id =c.id";
+  console.log(sql)
+  con.query(sql,function(err,rows){
+    if(err) throw err;
+    console.log(rows);
+    rows.length >= 1 ? response.json({data_present: true, rows: rows}) :  response.json({data_present: false});
+  });
+});
 
 app.post('/get-bid-value-for-user', function(request, response){
   var sql = "Select * from Bid where user_id = '" + request.body.user_id + "' and project_id = '" + request.body.project_id + "'";
