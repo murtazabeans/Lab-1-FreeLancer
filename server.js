@@ -186,19 +186,31 @@ app.post('/check_email', function(request, response){
 
 app.post('/hire_user', function(request, response){
   console.log(request.body);
-  var sql = "UPDATE Project SET assigned_to = '" + request.body.free_lancer_id + "' where id='" + request.body.p_id + "'";
-  console.log(sql);
-  console.log(sql);
-  con.query(sql,function(err,rows){
+  var query = "Update Bid SET status = 'Accepted' where user_id= '" + request.body.free_lancer_id + "' and project_id= '" + 
+  request.body.p_id + "'";
+  
+  var query1 = "UPDATE Project SET assigned_to = '" + request.body.free_lancer_id + "' where id='" + request.body.p_id + "'";
+  var query2 = "UPDATE Bid Set status = 'Rejected' where project_id='" + request.body.p_id + "' and user_id != '" + request.body.free_lancer_id + "'" ;
+
+  con.query(query1, function(err,rows){
+    if(err) throw err;
+    console.log(rows.length);
+    //rows.length >= 1 ? response.json({dataUpdated: true, rows: rows[0]}) :  response.json({dataUpdated: false});
+  })
+
+  con.query(query2, function(err,rows){
+    if(err) throw err;
+    console.log(rows.length);
+    //rows.length >= 1 ? response.json({dataUpdated: true, rows: rows[0]}) :  response.json({dataUpdated: false});
+  })
+
+
+  con.query(query, function(err,rows){
     if(err) throw err;
     console.log(rows.length);
     rows.length >= 1 ? response.json({dataUpdated: true, rows: rows[0]}) :  response.json({dataUpdated: false});
   });
 });
-
-// var sql = "select averageTable.avgDays, title, assigned_to, averageTable.project_id, X.number_of_days, c.name, c.id from" +
-//   " (select avg(b.number_of_days) as avgDays, p.title, b.project_id, p.assigned_to from Bid b,Project p where b.project_id=p.id group by p.id) " +
-//   "as averageTable, Bid X ,User c where X.project_id=averageTable.project_id and X.user_id='" + request.query.u_id + "' and X.user_id =c.id";
 
 app.get('/get_all_user_bid_projects', function(request, response){
   var sql = "select averageTable.avgDays, title, assigned_to, averageTable.project_id, X.number_of_days, c.name, c.id from" +
@@ -213,10 +225,12 @@ app.get('/get_all_user_bid_projects', function(request, response){
 });
 
 app.get('/get_all_user_published_projects', function(request, response){
-  var sql = "select averageTable.avgDays, title, assigned_to, averageTable.project_id, X.number_of_days, c.name, c.id from" +
-  " (select avg(b.number_of_days) as avgDays, p.title, b.project_id, p.assigned_to,p.user_id from Bid b,Project p where b.project_id=p.id group by p.id) " +
-  "as averageTable, Bid X ,User c where X.project_id=averageTable.project_id and X.user_id='" + request.query.u_id + "' and averageTable.user_id =c.id";
-  console.log(sql)
+  var sql = "select b.id,b.title, b.assigned_to as freelancer_id, b.user_id as employer_id, b.date_of_completion as date_of_completion, avgTable.avgDays,C.name as owner ,b.assigned_to as freeLancer, " +
+  "CASE WHEN b.assigned_to is null or trim(b.assigned_to) = '' " +
+      "Then '' ELSE  (select D.name from User D where D.id=b.assigned_to) END as freelancer_name from " +
+  "(SELECT b.id,COALESCE(avg(a.number_of_days),0) as avgDays from Project b left OUTER JOIN Bid a on a.project_id=b.id group by b.id) as avgTable " +
+  ",Project b, User C where b.user_id = '125' and b.user_id=C.id and avgTable.id=b.id group by b.id, b.title,avgTable.avgDays,owner,freeLancer"
+
   con.query(sql,function(err,rows){
     if(err) throw err;
     console.log(rows);
@@ -293,3 +307,34 @@ app.listen(port, function() {
 // select averageTable.avgDays,title,averageTable.id,X.number_of_days,c.name, c.id
 // from (select avg(b.number_of_days) as avgDays,p.title,p.id from Bid b,Project p where b.project_id=p.id group by p.id) as averageTable, Bid X ,User c where X.project_id=averageTable.id and X.user_id=100 
 // and X.user_id =c.id
+
+
+// select b.id,b.title,avgTable.avgP,C.name as owner ,b.assigned_to as freeLancer from (SELECT b.id,COALESCE(avg(a.price),0) as avgP from Project b left OUTER JOIN Bid a on a.project_id=b.id group by b.id) as avgTable ,Project b, User C where b.user_id = '125' and b.user_id=C.id and avgTable.id=b.id group by b.id, b.title,avgTable.avgP,owner,freeLancer
+
+// select b.id,b.title,avgTable.avgP,C.name as owner ,b.assigned_to as freeLancer,
+// CASE
+// 	WHEN b.assigned_to is null or trim(b.assigned_to) = ""
+//     Then ""
+//     ELSE
+// 	(select D.name from User D where D.id=b.assigned_to) 
+//     END
+
+// from 
+// (SELECT b.id,COALESCE(avg(a.price),0) as avgP from Project b left OUTER JOIN Bid a on a.project_id=b.id group by b.id) as avgTable
+// ,Project b, User C where b.user_id = '125' and b.user_id=C.id and avgTable.id=b.id 
+
+// group by b.id, b.title,avgTable.avgP,owner,freeLancer
+
+// select b.id,b.title,avgTable.avgP,C.name as owner ,b.assigned_to as freeLancer,
+// CASE
+// 	WHEN b.assigned_to is null or trim(b.assigned_to) = ""
+//     Then ""
+//     ELSE
+// 	(select D.name from User D where D.id=b.assigned_to) 
+//     END
+
+// from 
+// (SELECT b.id,COALESCE(avg(a.price),0) as avgP from Project b left OUTER JOIN Bid a on a.project_id=b.id group by b.id) as avgTable
+// ,Project b, User C where b.user_id = '125' and b.user_id=C.id and avgTable.id=b.id 
+
+// group by b.id, b.title,avgTable.avgP,owner,freeLancer

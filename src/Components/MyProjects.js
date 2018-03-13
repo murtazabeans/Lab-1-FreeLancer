@@ -35,8 +35,8 @@ class MyProjects extends Component {
     if(this.state.data != null){
       projectList = this.state.data.map(project => {
         return(
-          <MyProject key = {project.id} employer_id = {project.id}  project_name = {project.title} employer_name={project.name} avg_bid={project.avgDays}
-          user_bid={project.number_of_days} project_id = {project.project_id} assigned_to = {project.assigned_to}    />
+          <MyProject key = {project.id} freelancer_id= {project.freelancer_id} employer_id = {project.id}  project_name = {project.title} employer_name={project.owner} avg_bid={project.avgDays}
+          project_id = {project.id} employer_id = {project.employer_id} assigned_to = {project.freelancer_name} completion_date={project.date_of_completion}   />
         )
       })
     }
@@ -48,7 +48,8 @@ class MyProjects extends Component {
               <th scope="col">Project Name</th>
               <th scope="col">Employer</th>
               <th scope="col">Average Bid(in days)</th>
-              <th scope="col">Your Bid(in days)</th>
+              <th scope="col">FreeLancer Name</th>
+              <th scope="col">Estimate Project Completion Date</th>
               <th scope="col">Status</th>
             </tr>
           </thead>
