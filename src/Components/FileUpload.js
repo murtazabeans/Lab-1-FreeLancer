@@ -8,30 +8,6 @@ class FileUpload extends Component {
     this.state = {fileType: '', file: ''}
   }
 
-  componentDidMount(){
-    // this.loadImageNameFromServer();
-  }
-
-  // loadImageNameFromServer(){
-  //   let id = localStorage.user_id
-  //   if( id != null){
-  //     var self = this;
-  //     axios.get("http://localhost:3001/get_user?id=" + id)
-  //     .then(function (response) {
-  //       debugger
-  //       if(response.data.rows != null){
-  //         let user_detail = response.data.rows;
-  //         console.log(response);
-  //         self.setState({
-  //           fileType: user_detail.profile_image_name
-  //         })
-  //         return;
-  //       }
-  //       return;
-  //     })
-  //   } 
-  // }
-
   handleImageChange(e){
     e.preventDefault();
 
@@ -60,15 +36,12 @@ class FileUpload extends Component {
     if(this.state.file != ""){
       axios.post("http://localhost:3001/upload-Image", formData, config)
       .then(function (response) {
-        debugger
         if(response.data.fileType != null){
           let user_detail = response.data.rows;
           console.log(response);
-          debugger
           self.setState({
             fileType: "" + localStorage.user_id + "." + response.data.fileType
           })
-          debugger
           swal({
             type: 'success',
             title: 'Congratulations',
@@ -91,7 +64,6 @@ class FileUpload extends Component {
 
   render(props) {
     let image_tag = null;
-    debugger
     if(this.state.fileType != ""){
       image_tag = <img id = "profile_image" src= { require('../images/' + this.state.fileType) } alt="Smiley face" height="100px" width="100px" />
     }

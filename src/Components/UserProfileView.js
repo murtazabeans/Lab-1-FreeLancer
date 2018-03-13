@@ -21,11 +21,9 @@ class UserProfileView extends Component {
       var self = this;
       axios.get("http://localhost:3001/get_user?id=" + id)
       .then(function (response) {
-        debugger
         if(response.data.rows != null){
           let user_detail = response.data.rows;
           console.log(response);
-          debugger
           self.setState({
             email: user_detail.email, 
             name: user_detail.name, 
@@ -42,7 +40,6 @@ class UserProfileView extends Component {
   }
 
   render(props) {
-    debugger
     let isLoggedIn = localStorage.getItem("isLoggedIn");
     if(isLoggedIn != "true") {
       this.props.history.push("/signin");

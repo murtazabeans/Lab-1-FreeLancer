@@ -9,12 +9,10 @@ class Home extends Component {
 
   handleButton(e){
     e.preventDefault();
-    debugger
     this.props.history.push("/signup")
   }
 
   render(props) {
-    debugger
     let dashboard, projects_page, post_project, user_profile, session_link = null;
     if(this.props.user.login_data != null) {
       dashboard = <a className="link-style nav-link btn-info" href="#">Dashboard</a>

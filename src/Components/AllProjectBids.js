@@ -32,7 +32,6 @@ class AllProjectBids extends Component {
 
   render() {
     let bidList;
-    debugger
     if(this.state.data != null){
       bidList = this.state.data.map(bid => {
         let current_user_id = localStorage.user_id;

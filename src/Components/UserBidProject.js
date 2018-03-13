@@ -9,7 +9,6 @@ class ProjectDetail extends Component {
   }
 
   handleProjectNameClick(e){
-    debugger
     localStorage.setItem('project_id', e.target.dataset.attr);
     window.location.href = "http://localhost:3000/project-detail"
   }

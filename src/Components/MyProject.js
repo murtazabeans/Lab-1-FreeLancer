@@ -12,7 +12,6 @@ class MyProject extends Component {
   }
 
   handleProjectNameClick(e){
-    debugger
     localStorage.setItem('project_id', e.target.dataset.attr);
     window.location.href = "http://localhost:3000/project-detail"
   }
@@ -23,13 +22,11 @@ class MyProject extends Component {
   }
 
   handleFreeLancerNameClick(e){
-    debugger
     localStorage.setItem('profile_id', e.target.dataset.freelancerid);
     window.location.href = "http://localhost:3000/profile"
   }
 
   getProjectStatus(completion_date){
-    debugger
     if(completion_date == "" || completion_date == undefined){
       return "FreeLancer not hired Yet!"
     }
@@ -51,14 +48,12 @@ class MyProject extends Component {
 
   render() {
       let freelancer_name_link = null;
-      debugger
       const status = this.getProjectStatus(this.props.completion_date);
 
       if(this.props.assigned_to == ""){
         freelancer_name_link = "No FreeLancer Hired Yet!"
       }
       else{
-        debugger
         freelancer_name_link = <a data-freelancerId = {this.props.freelancer_id} onClick={this.handleFreeLancerNameClick} className="project-name" href="#" >{this.props.assigned_to}</a>
       }
       let date_of_completion;
@@ -66,8 +61,6 @@ class MyProject extends Component {
         date_of_completion = "Project not Assigned Yet!";
       }
       else{
-        debugger
-        //Moment.locale('en');
         var dt = this.props.completion_date;
         date_of_completion =  <Moment>{dt}</Moment>
       }

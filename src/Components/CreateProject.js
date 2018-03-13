@@ -47,7 +47,6 @@ class CreateProject extends Component {
   }
 
   handleFormSubmit(e){
-    debugger
     e.preventDefault();
     const formData = new FormData();
     formData.append('file', this.state.file);
@@ -81,7 +80,6 @@ class CreateProject extends Component {
       var self = this;
       axios.post("http://localhost:3001/create_project", formData, config)
       .then(function (response) {
-        debugger
         console.log(response);
         self.setState({
           title: '', 
@@ -159,7 +157,6 @@ class CreateProject extends Component {
         });
       }
       reader.readAsDataURL(file);
-      debugger
       document.getElementById("project-file").innerHTML = e.target.files[0].name;
   }
 

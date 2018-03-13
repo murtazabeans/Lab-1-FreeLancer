@@ -136,10 +136,8 @@ function mapDispatchToProps(dispatch){
     loginCredentials: (details) => {
       axios.post('http://localhost:3001/signin', details)
       .then(response => {
-        debugger
         console.log(response.data);
         if(response.data.correctCredentials){
-          debugger
           localStorage.setItem("isLoggedIn", true);
           localStorage.setItem("user_id", response.data.rows.id)
           dispatch({type: 'LoggedIn', payload: response.data.rows});

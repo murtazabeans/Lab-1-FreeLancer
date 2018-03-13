@@ -96,7 +96,6 @@ class ProjectView extends Component {
     var self = this;
     axios.get("http://localhost:3001/get_project_detail?p_id=" + project_id)
     .then(function (response) {
-      debugger
       if(response.data.rows != null){
         let user_detail = response.data.rows;
         console.log(response);
@@ -118,13 +117,11 @@ class ProjectView extends Component {
       const budget_range = this.state.data !== 'undefined' ? this.state.data.min_budget + " - " + 
       this.state.data.max_budget : null;
       let attachment_url = null;
-      debugger
       if(this.state.data.file_name != undefined && this.state.data.file_name != ""){
         var a = require('../project-file/' + this.state.data.file_name)
         
         attachment_url = <a href = {a} className="custom-file-upload form-choose download-link" target="_blank">Show Attachment</a>
       }
-      debugger
       return (
           <div>
             <div className="limiter">

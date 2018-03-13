@@ -36,7 +36,6 @@ class AllProjects extends Component {
   render() {
     let projectList;
     if(this.state.data != null){
-      debugger
       projectList = this.state.data.map(project => {
         return(
           <ProjectDetail key = {project.id} id = {project.id} number_of_bids = {project.total_bids}  name={project.title} description={project.description} skills_required = {project.skills_required}
