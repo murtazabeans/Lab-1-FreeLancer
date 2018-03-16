@@ -60,21 +60,11 @@ class SignIn extends Component {
     let isLoggedIn = localStorage.getItem("isLoggedIn");
     
     if(isLoggedIn == "true") {
-      window.location.href = "http://localhost:3000";
+      window.location.href = "http://localhost:3000/projects";
       return;
-      // swal({
-      //   type: 'success',
-      //   title: 'Congratulations',
-      //   text: 'You have signed in Successfully!'
-      // })
     }
-
-    // if(this.props.user.isLoggedIn){
-    //   this.props.history.push('/');
-    // }
     return (
       <div>
-
         <div>
         </div>
         <div className="limiter">

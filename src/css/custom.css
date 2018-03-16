@@ -27,8 +27,26 @@
 	margin-top: 5%;
 }
 
+.container {
+	max-width: 1800px;
+}
+
 input[type="file"] {
 	display: none;
+}
+
+#freelancer-img{
+
+	width: 16%;
+	margin-left: 5%;
+}
+
+div#name {
+	font-size: 14px;
+	color: black;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 14px;
 }
 
 .image-form-group {
@@ -81,7 +99,7 @@ table.table.details-table {
 }
 
 .download-link{
-    margin-left: 42%;
+    margin-left: 29%;
     margin-top: 10%;
 }
 /* div#project-file {
@@ -89,8 +107,12 @@ table.table.details-table {
 } */
 
 .action-link{
-	width: 55%;
+	width: 80%;
   text-align: center;
+}
+
+td{
+	max-width: 250px;
 }
 
 #bid_form{
@@ -118,10 +140,11 @@ table.table.details-table {
 }
 
 /* footer.footer.bg-light {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
+	position:fixed;
+   left:0px;
+   bottom:0px;
+   height:30px;
+   width:100%;
 } */
 
 .web-link{

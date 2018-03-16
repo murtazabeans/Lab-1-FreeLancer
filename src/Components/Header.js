@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-// import ReactDOM from 'react-dom';
-//import './style.css';
+import {connect} from 'react-redux';
 
 class Header extends Component {
   constructor(){
@@ -14,7 +13,7 @@ class Header extends Component {
   }
 
   render(props) {
-    let  session_link, post_project, user_profile, projects_page, bid_page, mybidprojects, my_projects = null;
+    let  session_link, post_project, user_profile, projects_page, bid_page, mybidprojects, my_projects, user_name = null;
     let isLoggedIn = localStorage.getItem("isLoggedIn");
     if(isLoggedIn == "true") {
       mybidprojects = <a className="link-style nav-link btn-info" href="/my-bid-projects">My Bid Projects</a>
@@ -27,21 +26,34 @@ class Header extends Component {
     else{
       session_link = <a className="btn btn-primary" href="/signin">Sign In</a>      
     }
+    if(this.props.user.login_data != null){
+      user_name = <div id = "name"><i class="fa fa-user" aria-hidden="true"></i>    {this.props.user.login_data.name}  </div>
+    }
     return (
-      <div>
+      <div id = "header-main-div">
         <nav className="navbar navbar-light bg-light static-top">
           <div className="container">
-          <a href="https://www.freelancer.com/" target="_blank" className="navbar-brand web-link" title="Home"><img src= {require('../img/freelancer.svg')} /></a>
+          <a href="https://www.freelancer.com/" id="freelancer-img" target="_blank" className="navbar-brand web-link" title="Home"><img src= {require('../img/freelancer.svg')} /></a>
           { mybidprojects }
           { my_projects }
           { projects_page }
           { post_project }
           { user_profile }
           { session_link }
+          {user_name}
+          
           </div>
         </nav>
       </div>
     )
   }
 }
-export default Header;
+
+function mapStateToProps(state){
+  return{
+    user: state.userLoggedIn
+  }
+}
+
+export default connect(mapStateToProps)(Header)
+

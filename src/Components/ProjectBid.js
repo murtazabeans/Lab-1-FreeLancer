@@ -30,6 +30,9 @@ class ProjectBid extends Component {
     if(this.props.isProjectOwner){
         hire_button = <a href = "#" id = {this.props.free_lancer_id} className="link-style nav-link btn-info action-link" onClick = {this.handleHireButton}>Hire</a>
       }
+      else{
+        hire_button = "Waiting for Response"
+      }
     return (
         <tr>
           <td>

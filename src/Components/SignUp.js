@@ -99,7 +99,7 @@ class SignUp extends Component {
   render() {
     let isLoggedIn = localStorage.getItem("isLoggedIn");
     if(isLoggedIn == "true") {
-      window.location.href = "http://localhost:3000";
+      window.location.href = "http://localhost:3000/projects";
       return;
     }
     return (
@@ -168,7 +168,7 @@ function mapDispatchToProps(dispatch){
         dispatch({type: 'LoggedIn', payload: response.data.rows});
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("user_id", response.data.rows.id)
-        window.location.href = "http://localhost:3000";
+        window.location.href = "http://localhost:3000/projects";
       })
     }
   }

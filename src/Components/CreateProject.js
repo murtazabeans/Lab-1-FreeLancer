@@ -88,7 +88,7 @@ class CreateProject extends Component {
           min_budget: '',
           max_budget: ''
         })
-        self.props.history.push("/")
+        self.props.history.push("/projects")
       })
     }
   }
@@ -138,7 +138,7 @@ class CreateProject extends Component {
       return false;
     }
     else if(this.state.min_budget != ""){
-      if(this.state.min_budget > max_budget){
+      if(parseInt(this.state.min_budget) > parseInt(max_budget)){
         document.getElementById("max-budget-error").innerHTML = "Maximum Budget should be greater than Minimum Budget";
       return false;
       }

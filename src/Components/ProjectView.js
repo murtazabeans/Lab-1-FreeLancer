@@ -61,7 +61,12 @@ class ProjectView extends Component {
     let form_values = {user_id: localStorage.user_id, project_id: localStorage.project_id, no_of_days: this.state.days, price: this.state.price}
     axios.post("http://localhost:3001/submit_bid", form_values)
     .then(function (response) {
+        if(response.data.rows[0].avgDays != undefined)
+        {
+          self.state.data.days = response.data.rows[0].avgDays;
+        }
         self.setState({
+          data: self.state.data,
           days: '',
           price: '',
           btn_name: 'Submit Bid' 
@@ -71,6 +76,7 @@ class ProjectView extends Component {
           title: 'Thank You',
           text: 'Your Bid is Submitted Successfully!'
         })
+        self.props.history.push("/project-detail");
         document.getElementById("bid_form").style.display = "none";
 
     })
@@ -117,10 +123,10 @@ class ProjectView extends Component {
       const budget_range = this.state.data !== 'undefined' ? this.state.data.min_budget + " - " + 
       this.state.data.max_budget : null;
       let attachment_url = null;
-      if(this.state.data.file_name != undefined && this.state.data.file_name != ""){
-        var a = require('../project-file/' + this.state.data.file_name)
+      if(this.state.data.file_name != undefined && this.state.data.file_name != "undefined" && this.state.data.file_name != ""){
+        var attachment = require('../project-file/' + this.state.data.file_name)
         
-        attachment_url = <a href = {a} className="custom-file-upload form-choose download-link" target="_blank">Show Attachment</a>
+        attachment_url = <a href = {attachment} className="custom-file-upload form-choose download-link" target="_blank">Show Attachment</a>
       }
       return (
           <div>

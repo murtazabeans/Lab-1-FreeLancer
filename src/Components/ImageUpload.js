@@ -42,6 +42,11 @@ class ImageUpload extends Component {
         });
       }
       reader.readAsDataURL(file);
+      swal({
+        type: 'success',
+        title: 'Image Added',
+        text: 'You have added the Image successfully! Click on upload image to update your profile image'
+      })
   }
 
   handleFormSubmit(e){
