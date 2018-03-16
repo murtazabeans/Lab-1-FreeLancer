@@ -4,12 +4,23 @@ import {bindActionCreators} from 'redux';
 import ShowCase1 from '../img/bg-showcase-1.jpg';
 import ShowCase2 from '../img/bg-showcase-2.jpg';
 import ShowCase3 from '../img/bg-showcase-3.jpg';
+import axios from 'axios';
 
 class Home extends Component {
 
   handleButton(e){
     e.preventDefault();
     this.props.history.push("/signup")
+  }
+
+  componentWillMount(){
+    var self = this;
+    axios.get('http://localhost:3001/check_session', { withCredentials: true })
+    .then((response) => {
+      if(response.data.session.email !=  undefined){
+        window.location.href = "http://localhost:3000/projects";
+      }
+    })
   }
 
   render(props) {

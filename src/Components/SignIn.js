@@ -20,6 +20,16 @@ class SignIn extends Component {
     this.handleEmailChange = this.handleEmailChange.bind(this);
   }
 
+  componentWillMount(){
+    var self = this;
+    axios.get('http://localhost:3001/check_session', { withCredentials: true })
+    .then((response) => {
+      if(response.data.session.email !=  undefined){
+        window.location.href = "http://localhost:3000/projects";
+      }
+    })
+  }
+
   handlePasswordChange(e){
     this.setState({ password: e.target.value });
     e.target.value == "" ? document.getElementById("password-error").innerHTML = "Please enter your password" : 
@@ -57,12 +67,6 @@ class SignIn extends Component {
   }
 
   render() {
-    let isLoggedIn = localStorage.getItem("isLoggedIn");
-    
-    if(isLoggedIn == "true") {
-      window.location.href = "http://localhost:3000/projects";
-      return;
-    }
     return (
       <div>
         <div>
@@ -124,12 +128,13 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
   return{
     loginCredentials: (details) => {
-      axios.post('http://localhost:3001/signin', details)
+      axios.post('http://localhost:3001/signin', details, { withCredentials: true })
       .then(response => {
         console.log(response.data);
         if(response.data.correctCredentials){
           localStorage.setItem("isLoggedIn", true);
           localStorage.setItem("user_id", response.data.rows.id)
+          window.location.href = "http://localhost:3000/projects"
           dispatch({type: 'LoggedIn', payload: response.data.rows});
         }
         else{

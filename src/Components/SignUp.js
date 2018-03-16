@@ -30,6 +30,17 @@ class SignUp extends Component {
     this.handleEmailChange = this.handleEmailChange.bind(this);
   }
 
+  componentWillMount(){
+    var self = this;
+    axios.get('http://localhost:3001/check_session', { withCredentials: true })
+    .then((response) => {
+
+      if(response.data.session.email !=  undefined){
+        window.location.href = "http://localhost:3000/projects";
+      }
+    })
+  }
+
   handleNameChange(e){
     this.setState({ name: e.target.value });
     e.target.value == "" ? document.getElementById("name-error").innerHTML = "Please enter your name" : 
@@ -97,11 +108,6 @@ class SignUp extends Component {
   }
 
   render() {
-    let isLoggedIn = localStorage.getItem("isLoggedIn");
-    if(isLoggedIn == "true") {
-      window.location.href = "http://localhost:3000/projects";
-      return;
-    }
     return (
       <div>
         <div className="limiter">

@@ -8,6 +8,7 @@ var multiparty = require('multiparty');
 var http = require('http');
 var util = require('util');
 var fs = require('fs');
+var session = require('client-sessions');
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -16,13 +17,24 @@ var con = mysql.createConnection({
   database: "free_lancer"
 });
 
+app.use(session({   
+	cookieName: 'session',    
+	secret: 'freelancer_session',    
+	duration: 30 * 60 * 1000,    //setting the time for active session
+  activeDuration: 5 * 60 * 1000,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+  
+
 var port = process.env.API_PORT || 3001;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(function(req, res, next) {
- res.setHeader('Access-Control-Allow-Origin', '*');
+ res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
  res.setHeader('Access-Control-Allow-Credentials', 'true');
  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
@@ -45,10 +57,12 @@ app.post('/signup', function(request, response){
       var get_user_query = "Select * from User where email = '" + request.body.email + "' and password = '" + hash + "'";
       con.query(get_user_query,function(err,rows){
         if(err) throw err;
+        request.session.name = rows[0].name;
+        request.session.email = rows[0].email;        
         response.json({rows: rows[0]})
       });
     });
-  });   
+  });
 });
 
 app.post('/signin', function(request, response){
@@ -59,12 +73,33 @@ app.post('/signin', function(request, response){
     if(rows.length >= 1)
     {
       isPasswordCorrect = bcrypt.compareSync(request.body.password, rows[0].password);
-      isPasswordCorrect ? response.json({correctCredentials: true, rows: rows[0]}) :  response.json({correctCredentials: false});
+      if(isPasswordCorrect){
+        request.session.name = rows[0].name;
+        request.session.email = rows[0].email;
+        console.log(request.session);
+        response.json({correctCredentials: true, rows: rows[0]})
+      }
+      else{
+        response.json({correctCredentials: false});
+      }
     }
     else{
       response.json({correctCredentials: false});
     }
   });
+});
+
+app.get('/check_session', function(request, response){
+  console.log("Session Check");
+  console.log(request.session);
+  response.json({session: request.session});
+})
+
+app.get('/destroy_session', function(request, response){
+  console.log("Session Destroyed")
+  request.session.destroy();
+  response.json({message: "Session Destroyed"});
+  console.log(request.session)
 });
 
 app.get('/get_user', function(request, response){
@@ -127,7 +162,7 @@ app.get('/get_all_projects', function(request, response){
 
   con.query(sql,function(err,rows){
     if(err) throw err;
-    console.log(rows);
+    //console.log(rows);
     rows.length >= 1 ? response.json({data_present: true, rows: rows}) :  response.json({data_present: false});
   });
 });

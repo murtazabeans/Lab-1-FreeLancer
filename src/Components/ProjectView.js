@@ -15,8 +15,18 @@ class ProjectView extends Component {
   }
 
   componentWillMount(){
-     let project_id = localStorage.getItem("project_id");
-     this.loadProjectDetailsFromServer(project_id);
+    var self = this;
+    axios.get('http://localhost:3001/check_session', { withCredentials: true })
+    .then((response) => {
+      if(response.data.session.email ==  undefined){
+        window.location.href = "http://localhost:3000/signin";
+      }
+      else{
+        let project_id = localStorage.getItem("project_id");
+        this.loadProjectDetailsFromServer(project_id);
+      }
+    })
+     
   }
 
   handlePriceInput(e){

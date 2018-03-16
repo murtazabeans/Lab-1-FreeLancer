@@ -13,6 +13,16 @@ class AllProjectBids extends Component {
     this.loadBidsFromServer();
   }
 
+  componentWillMount(){
+    var self = this;
+    axios.get('http://localhost:3001/check_session', { withCredentials: true })
+    .then((response) => {
+      if(response.data.session.email ==  undefined){
+        window.location.href = "http://localhost:3000/signin";
+      }
+    })
+  }
+
   loadBidsFromServer(){
     var self = this;
     let project_id = localStorage.getItem("project_id")

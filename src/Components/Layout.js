@@ -20,11 +20,17 @@ class Layout extends Component {
   constructor(props) {
     super(props);
   }
-
+  
   componentWillMount(){
-    if(localStorage.user_id != undefined){
-      this.props.getUserName(localStorage.user_id)
-    }
+   
+    var self = this;
+    axios.get('http://localhost:3001/check_session', { withCredentials: true })
+    .then((response) => {
+
+      if(response.data.session.email !=  undefined){
+        this.props.getUserName(localStorage.user_id)
+      }
+    })
   }
 
   render() {

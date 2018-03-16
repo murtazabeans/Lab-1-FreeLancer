@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 class Header extends Component {
   constructor(){
@@ -9,6 +10,9 @@ class Header extends Component {
 
   handleSignOut(e){
     localStorage.clear();
+    axios.get('http://localhost:3001/destroy_session', { withCredentials: true })
+    .then((response) => {
+    })
     window.location.href = "http://localhost:3000/signin";
   }
 
@@ -40,8 +44,7 @@ class Header extends Component {
           { post_project }
           { user_profile }
           { session_link }
-          {user_name}
-          
+          { user_name }
           </div>
         </nav>
       </div>
