@@ -143,11 +143,11 @@ class ProjectView extends Component {
             <div className="limiter">
               <div className="container-login100">
                 <div className="wrap-login100">
-                  <div className="login100-form-title" style={{backgroundImage: `url(${Background})`}}>
-                    <span className="login100-form-title-1">
-                      Project Details
-                    </span>
-                  </div>
+                <div className="login100-form-title details-header">
+                  <span className="login100-form-title-1">
+                    Project Details
+                  </span>
+                </div>
                   {attachment_url}
                   {/* <input id="file-upload" type="file"  /> */}
                   <form className="login100-form validate-form">

@@ -13,7 +13,7 @@ class Header extends Component {
     axios.get('http://localhost:3001/destroy_session', { withCredentials: true })
     .then((response) => {
     })
-    window.location.href = "http://localhost:3000/signin";
+    window.location.href = "http://localhost:3000";
   }
 
   render(props) {

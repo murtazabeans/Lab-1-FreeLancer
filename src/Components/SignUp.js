@@ -34,7 +34,6 @@ class SignUp extends Component {
     var self = this;
     axios.get('http://localhost:3001/check_session', { withCredentials: true })
     .then((response) => {
-
       if(response.data.session.email !=  undefined){
         window.location.href = "http://localhost:3000/projects";
       }
@@ -169,12 +168,12 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
   return{
     registerUser: (details) => {
-      axios.post('http://localhost:3001/signup', details)
+      axios.post('http://localhost:3001/signup', details, { withCredentials: true })
       .then((response) => {
+        window.location.href = "http://localhost:3000/projects";
         dispatch({type: 'LoggedIn', payload: response.data.rows});
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("user_id", response.data.rows.id)
-        window.location.href = "http://localhost:3000/projects";
       })
     }
   }

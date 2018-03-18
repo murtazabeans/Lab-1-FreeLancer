@@ -12,7 +12,7 @@ class UserProfileView extends Component {
   }
 
   componentWillMount(){
-    this.loadUserDetailsFromServer();
+    
   }
 
   componentWillMount(){
@@ -21,6 +21,9 @@ class UserProfileView extends Component {
     .then((response) => {
       if(response.data.session.email ==  undefined){
         window.location.href = "http://localhost:3000/signin";
+      }
+      else{
+        this.loadUserDetailsFromServer();
       }
     })
   }
@@ -68,7 +71,7 @@ class UserProfileView extends Component {
             <div className="wrap-login100">
               <div className="login100-form-title details-header">
                 <span className="login100-form-title-1">
-                  Details
+                  User Details
                 </span>
               </div>
               

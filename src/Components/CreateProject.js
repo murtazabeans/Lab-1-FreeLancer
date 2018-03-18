@@ -112,7 +112,7 @@ class CreateProject extends Component {
   validateSkillsFormat(skills){
     
     if(skills.trim() == ""){
-      document.getElementById("skills-error").innerHTML = "Please enter Skills Requireds";
+      document.getElementById("skills-error").innerHTML = "Please enter Skills Required in this Project";
       return false;
     }
     return true;

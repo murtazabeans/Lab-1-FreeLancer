@@ -17,6 +17,8 @@ var con = mysql.createConnection({
   database: "free_lancer"
 });
 
+
+
 app.use(session({   
 	cookieName: 'session',    
 	secret: 'freelancer_session',    
@@ -58,7 +60,8 @@ app.post('/signup', function(request, response){
       con.query(get_user_query,function(err,rows){
         if(err) throw err;
         request.session.name = rows[0].name;
-        request.session.email = rows[0].email;        
+        request.session.email = rows[0].email;    
+        console.log(session);    
         response.json({rows: rows[0]})
       });
     });
@@ -66,6 +69,7 @@ app.post('/signup', function(request, response){
 });
 
 app.post('/signin', function(request, response){
+  console.log(request.body)
   var sql = "Select * from User where email = '" + request.body.email + "'";
   con.query(sql,function(err,rows){
     if(err) throw err;
@@ -128,20 +132,18 @@ app.post('/create_project', function(req, res){
     if(files.file != undefined){
       let { path: tempPath, originalFilename } = files.file[0];
       var fileName = + new Date() + originalFilename.replace(/\s/g, '');
-      
       let copyToPath = "./src/project-file/" + fileName; 
       //add path (copyToPath) to database pending 
       console.log(copyToPath);
       fs.readFile(tempPath, (err, data) => {
-      if (err) throw err;
-      fs.writeFile(copyToPath, data, (err) => {
-      if (err) throw err;
-      // delete temp image
-      console.log(fields);
-      fs.unlink(tempPath, () => {
-      });
-      
-      });
+        if (err) throw err;
+        fs.writeFile(copyToPath, data, (err) => {
+          if (err) throw err;
+          // delete temp image
+          console.log(fields);
+          fs.unlink(tempPath, () => {
+          });
+        });
       });
     }
   
@@ -169,13 +171,11 @@ app.get('/get_all_projects', function(request, response){
 
 app.get('/get_project_bids', function(request, response){
   console.log(request.query);
-  //var a = request.query.project_id;
   var sql = "Select b.id as 'id', u.id as 'freelancer_id', u.name as 'free_lancer_name', u.profile_image_name as profile_image_name, p.user_id as 'project_owner', b.price as 'bid_price', " +
   "b.number_of_days as 'days' from User u, Project p, Bid b where b.user_id = u.id and b.project_id = p.id and p.id = '" + request.query.pid + "'";
   console.log(sql);
   con.query(sql, function(err,rows){
     if(err) throw err;
-    //console.log(rows.length);
     rows.length >= 1 ? response.json({data_present: true, rows: rows}) :  response.json({data_present: false});
   });
 });
@@ -232,14 +232,11 @@ app.post('/hire_user', function(request, response){
   console.log(request.body);
   var query = "Update Bid SET status = 'Accepted' where user_id= '" + request.body.free_lancer_id + "' and project_id= '" + 
   request.body.p_id + "'";
-  
-  //var query1 = "UPDATE Project SET assigned_to = '" + request.body.free_lancer_id + "' where id='" + request.body.p_id + "'";
   var query2 = "UPDATE Bid Set status = 'Rejected' where project_id='" + request.body.p_id + "' and user_id != '" + request.body.free_lancer_id + "'" ;
   var query3 = "Select * from Bid where project_id='" + request.body.p_id + "' and status='Accepted'";
 
   con.query(query, function(err,rows){
     if(err) throw err;
-    //rows.length >= 1 ? response.json({dataUpdated: true, rows: rows[0]}) :  response.json({dataUpdated: false});
   });
 
   con.query(query2, function(err,rows){
