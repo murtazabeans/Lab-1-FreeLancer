@@ -70,7 +70,7 @@ class SignUp extends Component {
         self.setState({emailAlreadyPresent: true});
       }
     })
-    this.state.emailAlreadyPresent || nameErrorPresent || passwordErrorPresent || emailErrorPresent ? "" : this.props.registerUser(form_values);
+    !this.state.emailAlreadyPresent || nameErrorPresent || passwordErrorPresent || emailErrorPresent ? "" : this.props.registerUser(form_values);
   }
 
   validateNameFormat(name){

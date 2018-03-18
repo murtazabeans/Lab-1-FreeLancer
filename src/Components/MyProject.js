@@ -27,17 +27,28 @@ class MyProject extends Component {
   }
 
   getProjectStatus(completion_date){
+    debugger
     if(completion_date == "" || completion_date == undefined){
       return "FreeLancer not hired Yet!"
     }
     else{
-      var q = new Date();
-      var m = q.getMonth()+1;
-      var d = q.getDay();
-      var y = q.getYear();
-      var current_date = new Date(y,m,d);
+      var current_date = new Date();
+      var dd = current_date.getDate();
+      var mm = current_date.getMonth()+1; //January is 0!
+      var yyyy = current_date.getFullYear();
+
+      if(dd<10) {
+          dd = '0'+dd
+      } 
+
+      if(mm<10) {
+          mm = '0'+mm
+      } 
+
+      var current_date = new Date(mm + '/' + dd + '/' + yyyy)
+      //var current_date = new Date(y,m,d);
       var mydate=new Date(completion_date);
-      if(completion_date >= current_date){
+      if(mydate >= current_date){
         return "Project in Progress!"
       }
       else{
@@ -47,6 +58,7 @@ class MyProject extends Component {
   }
 
   render() {
+    debugger
       let freelancer_name_link = null;
       const status = this.getProjectStatus(this.props.completion_date);
 
