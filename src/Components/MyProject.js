@@ -27,7 +27,6 @@ class MyProject extends Component {
   }
 
   getProjectStatus(completion_date){
-    debugger
     if(completion_date == "" || completion_date == undefined){
       return "FreeLancer not hired Yet!"
     }
@@ -57,8 +56,7 @@ class MyProject extends Component {
     }
   }
 
-  render() {
-    debugger
+  render() {    
       let freelancer_name_link = null;
       const status = this.getProjectStatus(this.props.completion_date);
 
