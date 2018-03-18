@@ -23,13 +23,20 @@ class ProjectBid extends Component {
     })
   }
 
+  handleFreelancerNameClick(e){
+    localStorage.setItem('profile_id', e.target.dataset.freelancerid);
+    window.location.href = "http://localhost:3000/profile"
+  }
 
   render() {
-    let hire_button = null;
+    let hire_button, freelancer_name = null;
     let image_tag = <img id = "profile_image" src= { require('../images/' + this.props.image_name) } alt="Smiley face" height="80px" width="80px" />
     if(this.props.isProjectOwner){
         hire_button = <a href = "#" id = {this.props.free_lancer_id} className="link-style nav-link btn-info action-link" onClick = {this.handleHireButton}>Hire</a>
       }
+    else if(this.props.assigned_to != ""){
+      hire_button = this.props.assigned_to == this.props.free_lancer_id ? "Accepted" : "Rejected";
+    }
       else{
         hire_button = "Waiting for Response"
       }
@@ -39,7 +46,11 @@ class ProjectBid extends Component {
             {image_tag}
 
           </td>
-          <td>{this.props.freelancer_name}</td>
+          <td>
+          <a data-freelancerid = {this.props.free_lancer_id} onClick={this.handleFreelancerNameClick.bind(this)} className="project-name" href="#">
+          {this.props.freelancer_name}</a>
+          
+          </td>
           <td>{this.props.price}</td>
           <td>{this.props.days}</td>
           <td>

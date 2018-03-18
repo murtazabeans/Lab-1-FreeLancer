@@ -47,7 +47,9 @@ class AllProjectBids extends Component {
         let current_user_id = localStorage.user_id;
         let isProjectOwner = current_user_id == bid.project_owner ? true : false;
         return(
-          <ProjectBid key = {bid.id} id = {bid.id} image_name = {bid.profile_image_name}  freelancer_name={bid.free_lancer_name} free_lancer_id = {bid.freelancer_id} price={bid.bid_price} days = {bid.days} isProjectOwner = {isProjectOwner}  />
+          <ProjectBid key = {bid.id} id = {bid.id} image_name = {bid.profile_image_name}  
+          freelancer_name={bid.free_lancer_name} free_lancer_id = {bid.freelancer_id} price={bid.bid_price} days = {bid.days} 
+          isProjectOwner = {isProjectOwner} assigned_to={bid.assigned_to}  />
         )
       })
     }

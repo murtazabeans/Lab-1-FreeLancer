@@ -117,7 +117,7 @@ class CreateProject extends Component {
     }
     return true;
   }
-
+  
   validateMinBudgetFormat(min_budget){
     if(min_budget.trim() == ""){
       document.getElementById("min-budget-error").innerHTML = "Please enter Minimum Budget";
