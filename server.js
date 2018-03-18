@@ -393,19 +393,3 @@ app.post('/upload-Image', function(req, res){
 app.listen(port, function() {
  console.log(`api running on port ${port}`);
 });
-
-// Questions
-
-// Q.1) Explain the encryption algorithm used in your application. Mention different encryption algorithms available and the reason for your selection of the algorithm used.
-
-// Ans. The encryption algorithm used in my application is bcrypt function. Bcrypt is a password hashing function used for password encryption. This functions helps to store password in encrypted format in database.
-
-// Different encryption algorithms available for password encryption are:
-// Bcrypt
-// Bcrypt-nodejs
-// Password-hash
-// Cryptr
-// Node-crypto-gcm
-// Password-hash-and-salt
-
-// The Bcrypt library on npm really makes it easy to encrypt-decrypt or hash-compare passwords.
