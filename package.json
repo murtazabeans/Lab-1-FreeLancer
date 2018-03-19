@@ -58,5 +58,17 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "description": "Unzip the Folder Go to the existing folder Run npm install Run the command to start nodemon: npm run start-dev",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/murtazabeans/Lab-1-FreeLancer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/murtazabeans/Lab-1-FreeLancer/issues"
+  },
+  "homepage": "https://github.com/murtazabeans/Lab-1-FreeLancer#readme"
 }
